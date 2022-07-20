@@ -4,6 +4,7 @@ from answer_query import answer_question
 from context import bert_abstract
 from transformers import BertTokenizer
 import pickle
+from decouple import config
 
 from producer_ans import publish_answer
 
@@ -12,8 +13,7 @@ tokenizer = BertTokenizer.from_pretrained(
 with open('BERT_DL_model.pkl', 'rb') as file:
     BERT_DL_Model = pickle.load(file)
 
-params = pika.URLParameters(
-    'amqps://ihmjanpu:4XqHoydYlSJeU-tvf0M_HjDgN98uqG17@puffin.rmq2.cloudamqp.com/ihmjanpu')
+params = pika.URLParameters(config('RABBIT_URL'))
 
 connection = pika.BlockingConnection(params)
 
@@ -30,7 +30,7 @@ def callback(ch, method, properties, body):
 channel.basic_consume(
     queue='main', on_message_callback=callback, auto_ack=True)
 
-print('Started Consuming')
+print('Started consuming from question queue')
 
 channel.start_consuming()
 
