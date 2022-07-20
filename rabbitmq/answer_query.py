@@ -1,5 +1,3 @@
-from transformers import BertTokenizer
-import pickle
 import torch
 
 

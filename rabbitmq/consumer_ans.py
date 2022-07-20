@@ -12,6 +12,8 @@ channel = connection.channel()
 def callback(ch, method, properties, body):
     answer = json.loads(body)
     print(f'Received answer: {answer} \n')
+    with open('answer.txt', 'w') as f:
+        f.write(answer)
 
 
 channel.basic_consume(

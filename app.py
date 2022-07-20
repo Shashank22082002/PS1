@@ -1,17 +1,9 @@
 from flask import Flask, request, render_template
 import os
-from answer_query import answer_question
-from context import bert_abstract
-from producer import publish_question
-from transformers import BertTokenizer
-import pickle
+from rabbitmq.producer_question import publish_question
+import os.path
 
 app = Flask(__name__)
-
-tokenizer = BertTokenizer.from_pretrained(
-    'bert-large-uncased-whole-word-masking-finetuned-squad')
-with open('BERT_DL_model.pkl', 'rb') as file:
-    BERT_DL_Model = pickle.load(file)
 
 
 @app.route("/")
@@ -24,7 +16,11 @@ def answer():
 
     question = request.form.get("question")
     publish_question(question)
-    answer = answer_question(question, bert_abstract, tokenizer, BERT_DL_Model)
+    while(not os.path.exists('rabbitmq/answer.txt')):
+        continue
+    with open('rabbitmq/answer.txt', 'r') as f:
+        answer = f.read()
+    os.remove("rabbitmq/answer.txt")
     return render_template("answer.html", question=question, answer=answer)
 
 
