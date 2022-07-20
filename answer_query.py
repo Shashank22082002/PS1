@@ -3,15 +3,12 @@ import pickle
 import torch
 
 
-def answer_question(question, answer_text):
+def answer_question(question, answer_text, tokenizer, BERT_DL_Model):
     '''
     Takes a `question` string and an `answer_text` string (which contains the
     answer), and identifies the words within the `answer_text` that are the
     answer. Prints them out.
     '''
-
-    tokenizer = BertTokenizer.from_pretrained(
-        'bert-large-uncased-whole-word-masking-finetuned-squad')
     input_ids = tokenizer.encode(question, answer_text)
 
     sep_index = input_ids.index(tokenizer.sep_token_id)
@@ -24,8 +21,6 @@ def answer_question(question, answer_text):
 
     assert len(segment_ids) == len(input_ids)
 
-    with open('BERT_DL_model.pkl', 'rb') as file:
-        BERT_DL_Model = pickle.load(file)
     start_scores, end_scores = BERT_DL_Model(torch.tensor([input_ids]),
                                              token_type_ids=torch.tensor(
                                                  [segment_ids]),
