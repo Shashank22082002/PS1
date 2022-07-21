@@ -1,8 +1,8 @@
 import pika
 import json
+from decouple import config
 
-params = pika.URLParameters(
-    'amqps://ihmjanpu:4XqHoydYlSJeU-tvf0M_HjDgN98uqG17@puffin.rmq2.cloudamqp.com/ihmjanpu')
+params = pika.URLParameters(config('RABBIT_URL'))
 
 connection = pika.BlockingConnection(params)
 
@@ -19,8 +19,6 @@ def callback(ch, method, properties, body):
 channel.basic_consume(
     queue='answer', on_message_callback=callback, auto_ack=True)
 
-print('Started Consuming Answer')
-
+print('Started consuming from answer queue')
 channel.start_consuming()
-
 channel.close()
