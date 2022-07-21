@@ -18,3 +18,6 @@ Note due to so many dependencies there might be issue while running requirements
 open the server and worker services in bash mode (tail flag command) and then use pip freeze to see the dependencies install
 After that you can install any dependency from there only directly inside the container.
 Also you can run the app.py file directly from there.
+
+To run the flask API on Kubernetes, see the Flask_Kubernetes folder.
+
