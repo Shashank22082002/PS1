@@ -1,8 +1,8 @@
 import pika
 import json
+from decouple import config
 
-params = pika.URLParameters(
-    'amqps://ihmjanpu:4XqHoydYlSJeU-tvf0M_HjDgN98uqG17@puffin.rmq2.cloudamqp.com/ihmjanpu')
+params = pika.URLParameters(config('RABBIT_URL'))
 
 connection = pika.BlockingConnection(params)
 
